@@ -19,6 +19,16 @@
 #
 
 define :nginx_site, :enable => true do
+
+  # This is necessary so that we can refer to the 'nginx' resource without
+  # having to load the nginx::default recipe (which we might not want to do if
+  # are run_list is for simply deploying an app rather than configuring the
+  # entire server).
+  service "nginx" do
+    supports :status => true, :restart => true, :reload => true
+    action [ :enable, :start ]
+  end
+
   if params[:enable]
     execute "nxensite #{params[:name]}" do
       command "/usr/sbin/nxensite #{params[:name]}"
