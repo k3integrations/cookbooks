@@ -36,6 +36,10 @@ unicorn_config "/etc/unicorn/#{app['id']}.rb" do
   preload_app node[:unicorn][:preload_app] 
   worker_processes node[:unicorn][:worker_processes]
   before_fork node[:unicorn][:before_fork] 
+  after_fork  node[:unicorn][:after_fork]
+  stderr_path node[:unicorn][:stderr_path]
+  stdout_path node[:unicorn][:stdout_path]
+  notifies    node[:unicorn][:notifies]    if node[:unicorn][:notifies]
 end
 
 runit_service app['id'] do
