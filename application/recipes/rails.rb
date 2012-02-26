@@ -123,8 +123,7 @@ if app["database_master_role"]
       mode "644"
       variables(
         :host => (dbm.attribute?('cloud') ? dbm['cloud']['local_ipv4'] : dbm['ipaddress']),
-        :databases => app['databases'],
-        :rails_env => rails_env
+        :databases => app['databases']
       )
     end
   else
