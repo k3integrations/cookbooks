@@ -19,8 +19,18 @@
 
 app = node.run_state[:current_app]
 
-# make the _default chef_environment look like the Rails production environment
-rails_env = (node.chef_environment =~ /_default/ ? "production" : node.chef_environment)
+# Interpret the '_default' chef_environment as the 'production' Rails environment
+deploy_env = (node.chef_environment =~ /_default/ ? "production" : node.chef_environment)
+
+# Allow an app to specify a different rails_env to use than node.chef_environment
+# For example, the user may want:
+# * 'production' chef_environment to deploy the app to a production server with rails_env = 'production'
+# * 'staging'    chef_environment to deploy the app to a staging    server with rails_env = 'production' (*not* 'staging')
+if app['rails_env']
+  rails_env = app['rails_env'][node.chef_environment]
+else
+  rails_env = deploy_env
+end
 node.run_state[:rails_env] = rails_env
 
 ###
