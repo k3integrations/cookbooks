@@ -203,6 +203,13 @@ deploy_revision app['id'] do
         cwd release_path
       end
     end
+
+    class << self
+      include Chef::Mixin::LanguageIncludeRecipe
+    end
+    Array(app["before_migrate"]).each do |recipe|
+      include_recipe recipe
+    end
   end
 
   symlink_before_migrate({
@@ -221,6 +228,7 @@ deploy_revision app['id'] do
   else
     migrate false
   end
+
   before_symlink do
     ruby_block "remove_run_migrations" do
       block do
@@ -229,6 +237,13 @@ deploy_revision app['id'] do
           node.run_list.remove("role[#{app['id']}_run_migrations]")
         end
       end
+    end
+
+    class << self
+      include Chef::Mixin::LanguageIncludeRecipe
+    end
+    Array(app["before_symlink"]).each do |recipe|
+      include_recipe recipe
     end
   end
 end
