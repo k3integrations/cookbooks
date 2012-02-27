@@ -208,6 +208,7 @@ deploy_revision app['id'] do
       include Chef::Mixin::LanguageIncludeRecipe
     end
     Array(app["before_migrate"]).each do |recipe|
+      node.run_state[:release_path] = release_path
       include_recipe recipe
     end
   end
@@ -243,6 +244,7 @@ deploy_revision app['id'] do
       include Chef::Mixin::LanguageIncludeRecipe
     end
     Array(app["before_symlink"]).each do |recipe|
+      node.run_state[:release_path] = release_path
       include_recipe recipe
     end
   end
