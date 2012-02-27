@@ -212,7 +212,12 @@ deploy_revision app['id'] do
 
   if app['migrate'][node.chef_environment] && node[:apps][app['id']][node.chef_environment][:run_migrations]
     migrate true
-    migration_command app['migration_command'] || "rake db:migrate"
+
+    command = app['migration_command'] || "rake db:migrate"
+    if app['rvm'] && (ruby_string = app['rvm']['ruby_string'])
+      command = "#{node['rvm']['root_path']}/bin/rvm-shell '#{ruby_string}' -c '#{command}'"
+    end
+    migration_command command
   else
     migrate false
   end
