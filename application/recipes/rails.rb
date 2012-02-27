@@ -177,7 +177,11 @@ deploy_revision app['id'] do
         to "#{app['deploy_to']}/shared/vendor_bundle"
       end
       common_groups = %w{development test cucumber staging production}
-      execute "bundle install --deployment --without #{(common_groups -([node.chef_environment])).join(' ')}" do
+      command = "bundle install --deployment --without #{(common_groups -([node.chef_environment])).join(' ')}"
+      if app['rvm'] && (ruby_string = app['rvm']['ruby_string'])
+        command = "#{node['rvm']['root_path']}/bin/rvm-shell '#{ruby_string}' -c '#{command}'"
+      end
+      execute command do
         ignore_failure true
         cwd release_path
       end
