@@ -17,15 +17,20 @@
 # limitations under the License.
 #
 
+set[:runit][:service_dir] = "/etc/service"
+set[:runit][:sv_dir]      = "/etc/sv"
+
 case platform
-when "ubuntu","debian"
-  set[:runit][:sv_bin] = "/usr/bin/sv"
+when "redhat"
+  # If installed from source...
+  # Installing from source installs commands to /usr/local/bin/
+  #set[:runit][:sv_bin]    = "/usr/local/bin/sv"
+  #set[:runit][:chpst_bin] = "/usr/local/bin/chpst"
+
+  set[:runit][:sv_bin]    = "/sbin/sv"
+  set[:runit][:chpst_bin] = "/sbin/chpst"
+
+else
+  set[:runit][:sv_bin]    = "/usr/bin/sv"
   set[:runit][:chpst_bin] = "/usr/bin/chpst"
-  set[:runit][:service_dir] = "/etc/service"
-  set[:runit][:sv_dir] = "/etc/sv"
-when "gentoo"
-  set[:runit][:sv_bin] = "/usr/bin/sv"
-  set[:runit][:chpst_bin] = "/usr/bin/chpst"
-  set[:runit][:service_dir] = "/etc/service"
-  set[:runit][:sv_dir] = "/var/service"
 end
