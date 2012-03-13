@@ -20,7 +20,7 @@
 
 # Based on apache2/definitions/web_app.rb
 
-define :nginx_web_app, :template => "web_app.conf.erb", :enable => true do
+define :nginx_web_app, :template => "web_app.conf.erb", :enable => true, :app => nil do
 
   # This is necessary so that we can refer to the 'nginx' resource without
   # having to load the nginx::default recipe (which we might not want to do if
@@ -41,6 +41,7 @@ define :nginx_web_app, :template => "web_app.conf.erb", :enable => true do
     group "root"
     mode 0644
     variables(
+      :app => params[:app],
       :name => name,
       :params => params
     )
