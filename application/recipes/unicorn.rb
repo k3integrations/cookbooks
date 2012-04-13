@@ -54,8 +54,8 @@ runit_service app['id'] do
 end
 
 if ::File.exists?(::File.join(app['deploy_to'], "current"))
-  d = resources(:deploy_revision => app['id'])
-  d.restart_command do
+  d = resources(:deploy_revision => app['id']) rescue nil
+  d && d.restart_command do
     execute "/etc/init.d/#{app['id']} hup"
   end
 end
